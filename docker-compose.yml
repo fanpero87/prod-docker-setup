@@ -1,0 +1,30 @@
+version: "3.5"
+services:
+  php:
+    image: prodtest:latest
+    restart: unless-stopped
+    networks:
+      - prodtest
+    ports:
+      - 888:80
+    environment:
+      - APP_KEY="base64:uATBilE1YfVOc3UOfKo4bNZJ3UKylK1qf3Xmu/bbDZ8="
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=sqlite
+      # - DB_DSN="mongodb+srv://localhost/coreapi?retryWrites=true&w=majority"
+      - DB_DATABASE="prodtest"
+      - CACHE_DRIVER=file
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - prodtest
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+networks:
+  prodtest:
+    driver: bridge
